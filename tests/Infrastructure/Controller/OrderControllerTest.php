@@ -22,12 +22,15 @@ final class OrderControllerTest extends WebTestCase
     use ResetDatabase;
     use Factories;
 
-    public const SERVER = [
+    /**
+     * @var array<string, string>
+     */
+    public const array SERVER = [
         'CONTENT_TYPE' => 'application/json',
         'HTTP_ACCEPT' => 'application/json',
     ];
-    private const ADD_PRODUCT_CART_ENDPOINT = '/api/cart/add';
-    private const ADD_ORDER_ENDPOINT = '/order/add';
+    private const string ADD_PRODUCT_CART_ENDPOINT = '/api/cart/add';
+    private const string ADD_ORDER_ENDPOINT = '/order/add';
 
     private KernelBrowser $client;
     private EntityManagerInterface $entityManager;

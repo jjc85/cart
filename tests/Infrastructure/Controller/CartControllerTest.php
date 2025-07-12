@@ -19,15 +19,18 @@ final class CartControllerTest extends WebTestCase
     use ResetDatabase;
     use Factories;
 
-    public const SERVER = [
+    /**
+     * @var array<string, string>
+     */
+    public const array SERVER = [
         'CONTENT_TYPE' => 'application/json',
         'HTTP_ACCEPT' => 'application/json',
     ];
 
-    private const ADD_PRODUCT_CART_ENDPOINT = '/api/cart/add';
-    private const REMOVE_PRODUCT_CART_ENDPOINT = '/api/cart/remove';
-    private const UPDATE_PRODUCT_CART_ENDPOINT = '/api/cart/update';
-    private const VIEW_CART_ENDPOINT = '/api/cart/view';
+    private const string ADD_PRODUCT_CART_ENDPOINT = '/api/cart/add';
+    private const string REMOVE_PRODUCT_CART_ENDPOINT = '/api/cart/remove';
+    private const string UPDATE_PRODUCT_CART_ENDPOINT = '/api/cart/update';
+    private const string VIEW_CART_ENDPOINT = '/api/cart/view';
 
     private KernelBrowser $client;
 
