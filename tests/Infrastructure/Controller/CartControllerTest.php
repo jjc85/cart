@@ -29,7 +29,6 @@ final class CartControllerTest extends WebTestCase
 
     private const string ADD_PRODUCT_CART_ENDPOINT = '/api/cart/add';
     private const string REMOVE_PRODUCT_CART_ENDPOINT = '/api/cart/remove';
-    private const string UPDATE_PRODUCT_CART_ENDPOINT = '/api/cart/update';
     private const string VIEW_CART_ENDPOINT = '/api/cart/view';
 
     private KernelBrowser $client;
