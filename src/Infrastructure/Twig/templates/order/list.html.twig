@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Listado de productos
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <h1>Pedidos realizados</h1>
+
+    <h2 style="text-align: center">
+        <a href="{{ path('product_list') }}" class="button">Volver a Productos</a>
+    </h2>
+
+
+    <div class="flex-container">
+        <div class="flex-column">
+            {% for order in orders %}
+                <table>
+                    <caption style="color: green">ID {{ order.id }} Fecha de creación: {{ order.createdAt|date('d-m-Y H:i:s') }}</caption>
+                    <thead>
+                        <tr>
+                            <th>ProductName</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for orderItem in order.orderItems %}
+                            <tr>
+                                <td>{{ orderItem.productName }}</td>
+                                <td>{{ orderItem.quantity }}</td>
+                                <td>{{ orderItem.price }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr style="color: red">
+                            <td colspan="2" style="text-align: right ">Total del pedido</td>
+                            <td>{{ order.totalAmount }}</td>
+                        </tr>
+                </table>
+                <hr style="height: 5px; background-color: black;">
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

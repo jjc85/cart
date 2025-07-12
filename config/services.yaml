@@ -17,8 +17,23 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Entity/'
+            - '../src/Infrastructure/Persistence/Entity/'
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Application\EventHandler\OrderCreatedEmailHandler:
+        arguments:
+            $defaultEmailFrom: '%env(DEFAULT_EMAIL_FROM)%'
+            $defaultEmailTo: '%env(DEFAULT_EMAIL_TO)%'
+
+    App\Tests\DataFixtures\:
+        resource: '../tests/DataFixtures/*'
+        tags: [ 'doctrine.fixture.orm' ]
+
+    App\Infrastructure\EventSubscriber\ValidationExceptionListener:
+        tags: [ 'kernel.event_subscriber' ]
+
+
+

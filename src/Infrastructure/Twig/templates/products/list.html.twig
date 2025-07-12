@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Listado de productos
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <h1>Productos y Carrito</h1>
+
+    <div class="flex-container">
+        <div class="flex-column">
+            <table>
+                <caption> <h2>Productos </h2> </caption>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if products is empty %}
+                        <p>No hay productos disponibles.</p>
+                    {% endif %}
+
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product.name }} </td>
+                            <td>{{ product.price }} </td>
+                            <td> <button class="button-add-cart" data-product-id="{{ product.id }}"> Añadir al carrito</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="flex-column">
+            {% set cart = app.session.get('cart') %}
+
+            {% if cart is null or cart.empty %}
+                <p>Tu carrito esta vacio.</p>
+            {% else %}
+                <table>
+                    <caption> <h2>Carrito </h2> </caption>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for productId, cartItem  in cart.cartItems %}
+                        <tr data-product-id="{{ productId }}">
+                            <td> {{ cartItem.productName }} </td>
+                            <td> <input class="quantity" type="number" value="{{ cartItem.quantity }}"> </td>
+                            <td> {{ cartItem.price }} </td>
+                            <td> <button class="button-remove-cart">X</button> </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <p>Total: {{ cart.totalPrice }}</p>
+                <button id="checkout-button">Finalizar compra</button>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const PRODUCTS_END_POINT = 'products';
+            const CART_ADD_PRODUCT_END_POINT = '/api/cart/add';
+            const CART_REMOVE_PRODUCT_END_POINT = 'api/cart/remove';
+            const CART_UPDATE_PRODUCT_END_POINT = 'api/cart/update';
+            const CART_CHECKOUT_END_POINT = 'order/add';
+            const ORDER_LIST_END_POINT = 'order/list';
+
+            function sendRequest(endpoint, data, redirect = PRODUCTS_END_POINT) {
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = redirect;
+                    } else {
+                        console.error(`Error with ${endpoint}:`, response.statusText);
+                    }
+                }).catch(error => {
+                    console.error('Network error:', error);
+                });
+            }
+
+            const addCartButtons = document.querySelectorAll('.button-add-cart');
+            addCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    sendRequest(CART_ADD_PRODUCT_END_POINT, { productId: productId });
+                });
+            });
+
+            const removeCartButtons = document.querySelectorAll('.button-remove-cart');
+            removeCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.parentNode.parentNode.getAttribute('data-product-id'));
+                    sendRequest(CART_REMOVE_PRODUCT_END_POINT, { productId: productId });
+                });
+            });
+
+            const quantityInputs = document.querySelectorAll('.quantity');
+            quantityInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const productId = parseInt(this.parentNode.parentNode.getAttribute('data-product-id'));
+                    const quantity = parseInt(this.value);
+                    sendRequest(CART_UPDATE_PRODUCT_END_POINT, { productId: productId, quantity: quantity });
+                });
+            });
+
+            const checkoutButton = document.querySelector('#checkout-button');
+
+            checkoutButton.addEventListener('click', function() {
+                console.log('aaa');
+                sendRequest(CART_CHECKOUT_END_POINT, {}, ORDER_LIST_END_POINT);
+            });
+
+        });
+    </script>
+{% endblock %}
