@@ -2,12 +2,12 @@
 
 namespace App\Domain\Repository;
 
-use App\Domain\Entity\Product;
+use App\Domain\Entity\Order;
 
 interface OrderRepositoryInterface
 {
     /**
-     * @return list<Product>
+     * @return list<Order>
      */
     public function findAllOrdersWithOrderItems(): array;
 }
