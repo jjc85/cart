@@ -30,7 +30,7 @@ class OrderController extends AbstractController
         $query = new GetOrders();
         $envelope = $this->queryBus->dispatch($query);
 
-        /** @var list<Order> $products */
+        /** @var list<Order> $orders */
         $orders = $envelope->last(HandledStamp::class)?->getResult() ?? [];
 
         return $this->render('order/list.html.twig', [
